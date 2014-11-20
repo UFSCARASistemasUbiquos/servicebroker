@@ -29,11 +29,12 @@ public class SbiDpwsClient extends DefaultClient {
     private Service ourService;
     private QName serviceType;
     private QName deviceType;
+    private Boolean found = false;
 
     public SbiDpwsClient(Requisicao requisicao) {
         this.requisicao = requisicao;
 
-        this.serviceType = new QName(requisicao.getServiceName(), StartExample.MY_NAMESPACE);
+        this.serviceType = new QName(requisicao.getServiceName(), DpwsServiceBrockerServer.MY_NAMESPACE);
 
         SearchParameter params = new SearchParameter();
         params.setServiceTypes(new QNameSet(serviceType));
@@ -92,10 +93,12 @@ public class SbiDpwsClient extends DefaultClient {
      }
      */
 
+    
+    
     @Override
     public void serviceFound(ServiceReference serviceRef, SearchParameter search) {
         if (serviceRef.getServiceId().equals(new URI(requisicao.getServiceName()))) {
-
+            found = true;
             try {
                 ourService = (Service) serviceRef.getService();
             } catch (TimeoutException e) {
@@ -104,5 +107,12 @@ public class SbiDpwsClient extends DefaultClient {
 
             executeOperation();
         }
+    }
+
+    /**
+     * @return the found
+     */
+    public Boolean getFound() {
+        return found;
     }
 }

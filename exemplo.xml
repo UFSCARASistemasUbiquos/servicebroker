@@ -1,0 +1,31 @@
+<RequisicaoServiceBroker>
+	<DeviceTarget>Device</DeviceTarget>
+	<DeviceName>Device</DeviceName>
+	<ServiceName>SimpleService</ServiceName>
+	<OperationName>Somaa</OperationName>
+	
+	<Escalonamento>
+		<TipoEscalonamento>Soft</TipoEscalonamento>
+		<Prioridade>1</Prioridade>
+		<Deadline>2</Deadline>
+	</Escalonamento>
+	
+	<ArgumentosInput>
+		<Argumento>
+			<NomeArgumento>a</NomeArgumento>
+			<TipoArgumento>Double</TipoArgumento>
+			<ValorArgumento>3.0</ValorArgumento>
+		</Argumento>
+		<Argumento>
+			<NomeArgumento>b</NomeArgumento>
+			<TipoArgumento>b</TipoArgumento>
+			<ValorArgumento>1.5</ValorArgumento>
+		</Argumento>
+	</ArgumentosInput>
+	<ArgumentosOutput>
+		<Argumento>
+			<NomeArgumento>x</NomeArgumento>
+			<TipoArgumento>Double</TipoArgumento>
+		</Argumento>
+	</ArgumentosOutput>
+</RequisicaoServiceBroker>

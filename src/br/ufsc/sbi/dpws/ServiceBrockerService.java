@@ -27,14 +27,14 @@ import org.ws4d.java.service.parameter.ParameterValue;
 import org.ws4d.java.types.QName;
 import org.ws4d.java.util.ParameterUtil;
 
-public class TestService extends DefaultService {
+public class ServiceBrockerService extends DefaultService {
 
-    TestService(int i) {
+    public ServiceBrockerService(int i) {
         // Give the configID to the super class to be processed.
         super(i);
 
         this.addOperation(new SomaOperation());
-        this.addOperation(new ServiceBrockerOperation());
+        this.addOperation(new ServiceBrokerOperation());
     }
 }
 
@@ -45,16 +45,16 @@ class SomaOperation extends Operation {
     static String X_VALUE = "x";
 
     SomaOperation() {
-        super("Soma", new QName("SimpleService", StartExample.MY_NAMESPACE));
+        super("Soma", new QName("SimpleService", DpwsServiceBrockerServer.MY_NAMESPACE));
 
-        Element somaInputWrapperElement = new Element(new QName("SInput", StartExample.MY_NAMESPACE));
-        ComplexType somaInput = new ComplexType(new QName("SomaInputType", StartExample.MY_NAMESPACE), ComplexType.CONTAINER_SEQUENCE);
-        somaInput.addElement(new Element(new QName(A_VALUE, StartExample.MY_NAMESPACE), SchemaUtil.getSchemaType(SchemaUtil.TYPE_DOUBLE)));
-        somaInput.addElement(new Element(new QName(B_VALUE, StartExample.MY_NAMESPACE), SchemaUtil.getSchemaType(SchemaUtil.TYPE_DOUBLE)));
+        Element somaInputWrapperElement = new Element(new QName("SInput", DpwsServiceBrockerServer.MY_NAMESPACE));
+        ComplexType somaInput = new ComplexType(new QName("SomaInputType", DpwsServiceBrockerServer.MY_NAMESPACE), ComplexType.CONTAINER_SEQUENCE);
+        somaInput.addElement(new Element(new QName(A_VALUE, DpwsServiceBrockerServer.MY_NAMESPACE), SchemaUtil.getSchemaType(SchemaUtil.TYPE_DOUBLE)));
+        somaInput.addElement(new Element(new QName(B_VALUE, DpwsServiceBrockerServer.MY_NAMESPACE), SchemaUtil.getSchemaType(SchemaUtil.TYPE_DOUBLE)));
         somaInputWrapperElement.setType(somaInput);
         this.setInput(somaInputWrapperElement);
 
-        Element twoWayOut = new Element(new QName(X_VALUE, StartExample.MY_NAMESPACE), SchemaUtil.getSchemaType(SchemaUtil.TYPE_DOUBLE));
+        Element twoWayOut = new Element(new QName(X_VALUE, DpwsServiceBrockerServer.MY_NAMESPACE), SchemaUtil.getSchemaType(SchemaUtil.TYPE_DOUBLE));
         this.setOutput(twoWayOut);
     }
 
@@ -70,18 +70,18 @@ class SomaOperation extends Operation {
     }
 }
 
-class ServiceBrockerOperation extends Operation {
+class ServiceBrokerOperation extends Operation {
 
     static String INPUT_VALUE = "INPUT";
     static String OUTPUT_VALUE = "OUTPUT";
 
-    ServiceBrockerOperation() {
-        super("ServiceBrocker", new QName("SimpleService", StartExample.MY_NAMESPACE));
+    ServiceBrokerOperation() {
+        super("ServiceBroker", new QName("SimpleService", DpwsServiceBrockerServer.MY_NAMESPACE));
 
-        Element input = new Element(new QName(INPUT_VALUE, StartExample.MY_NAMESPACE), SchemaUtil.getSchemaType(SchemaUtil.TYPE_STRING));
+        Element input = new Element(new QName(INPUT_VALUE, DpwsServiceBrockerServer.MY_NAMESPACE), SchemaUtil.getSchemaType(SchemaUtil.TYPE_STRING));
         this.setInput(input);
 
-        Element output = new Element(new QName(OUTPUT_VALUE, StartExample.MY_NAMESPACE), SchemaUtil.getSchemaType(SchemaUtil.TYPE_STRING));
+        Element output = new Element(new QName(OUTPUT_VALUE, DpwsServiceBrockerServer.MY_NAMESPACE), SchemaUtil.getSchemaType(SchemaUtil.TYPE_STRING));
         this.setOutput(output);
     }
 
@@ -97,12 +97,19 @@ class ServiceBrockerOperation extends Operation {
             Requisicao requisicao = (Requisicao) unmarshaller.unmarshal(reader);
 
             SbiDpwsClient dpwsClient = new SbiDpwsClient(requisicao);
+            if (dpwsClient.getFound()) {
+                requisicao.getArgumentosOutput();
+                ParameterValue returnValue = createOutputValue();
+                ParameterUtil.setString(returnValue, null, requisicao.toXML());
+                return returnValue;
+            }
+            
+            /*
+            SbiDlnaClient dlnaClient = new SbiDlnaClient(requisicao);
             requisicao.getArgumentosOutput();
+            */
             
-            ParameterValue returnValue = createOutputValue();
-            ParameterUtil.setString(returnValue, null, requisicao.toXML());
-            
-            return returnValue;
+            return null;
         } catch (JAXBException ex) {
             ex.printStackTrace();
             return null;
