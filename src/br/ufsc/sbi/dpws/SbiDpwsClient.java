@@ -53,6 +53,10 @@ public class SbiDpwsClient extends DefaultClient {
 
     public void executeOperation() {
         Operation ourOperation = ourService.getAnyOperation(this.serviceType, this.requisicao.getOperationName());
+        
+        if (ourOperation == null)
+            return;
+        
         ParameterValue ourValue = ourOperation.createInputValue();
 
         for (Argumento a : this.requisicao.getArgumentosInput()) {

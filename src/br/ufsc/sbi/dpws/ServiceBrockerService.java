@@ -9,6 +9,7 @@
  */
 package br.ufsc.sbi.dpws;
 
+import br.ufsc.sbi.dlna.SBT;
 import br.ufsc.type.Requisicao;
 import java.io.StringReader;
 
@@ -86,6 +87,7 @@ class ServiceBrokerOperation extends Operation {
     }
 
     @Override
+    @SuppressWarnings("empty-statement")
     public ParameterValue invoke(ParameterValue parameterValues) throws InvocationException, TimeoutException {
         String xmlInput = ParameterUtil.getString(parameterValues, null);
 
@@ -103,6 +105,11 @@ class ServiceBrokerOperation extends Operation {
                 ParameterUtil.setString(returnValue, null, requisicao.toXML());
                 return returnValue;
             }
+            
+            SBT sbt = new SBT(xmlInput);
+            new Thread(sbt).start();
+            while (!sbt.getHandler().isFinished());
+            System.out.println(sbt.getHandler().getReturnValue());
             
             /*
             SbiDlnaClient dlnaClient = new SbiDlnaClient(requisicao);

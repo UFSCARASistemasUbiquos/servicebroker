@@ -159,4 +159,20 @@ public class ServiceHandler
             }
         }
     }
+
+    public boolean isFinished() {
+        return finished;
+    }
+
+    public void setFinished(boolean finished) {
+        this.finished = finished;
+    }
+
+    public String getReturnValue() {
+        return returnValue;
+    }
+
+    public void setReturnValue(String returnValue) {
+        this.returnValue = returnValue;
+    }
 }

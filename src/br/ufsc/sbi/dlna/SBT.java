@@ -31,11 +31,13 @@ public class SBT implements Runnable
     public void run()
     {        
         sh.findAndExecute();
+        /*
         while(!sh.finished);
         System.out.println("Fim da execução da ação.");
         if(sh.returnValue != null)
             System.out.println("Retorno: " +  sh.returnValue);
         devolveRetorno();
+                */
         System.out.println("Entrou na rotina de retornar");
     }
 
@@ -57,6 +59,10 @@ public class SBT implements Runnable
         }
         ServiceHandler novo = new ServiceHandler(xmlResposta.toXML());
         novo.findAndExecute(); 
+    }
+
+    public ServiceHandler getHandler() {
+        return sh;
     }
     
 }
